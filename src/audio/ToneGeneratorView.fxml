@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#KeyPressed" onKeyReleased="#Stop" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="audio.ToneGenerator">
+   <children>
+      <HBox layoutX="76.0" layoutY="200.0" prefHeight="100.0" prefWidth="448.0">
+         <children>
+            <Button mnemonicParsing="false" onMousePressed="#PlayA3" onMouseReleased="#Stop" prefWidth="50.0" text="A3">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onMousePressed="#PlayB3" onMouseReleased="#Stop" prefWidth="50.0" text="B3">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onMousePressed="#PlayC4" onMouseReleased="#Stop" prefWidth="50.0" text="C4">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onMousePressed="#PlayD4" onMouseReleased="#Stop" prefWidth="50.0" text="D4">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onMousePressed="#PlayE4" onMouseReleased="#Stop" prefWidth="50.0" text="E4">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onMousePressed="#PlayF4" onMouseReleased="#Stop" prefWidth="50.0" text="F4">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onMousePressed="#PlayG4" onMouseReleased="#Stop" prefWidth="50.0" text="G4">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onMousePressed="#PlayA4" onMouseReleased="#Stop" prefWidth="50.0" text="A4">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
