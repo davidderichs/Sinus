@@ -5,10 +5,17 @@ package UE01A04;
  */
 public class Rekursion {
 
-    public void geradeZahlen(int i){
+    public static void geradeZahlen(int i){
         if (i>20) return;
         if (i%2 == 0) System.out.println(i);
         geradeZahlen(++i);
+    }
+
+    public static void vorzeichenWechseln(int i, int wert){
+        if (i>20) return;
+        System.out.println(wert);
+        i++;
+        vorzeichenWechseln(i, -wert);
     }
     /*
     * 4.1 Mit welcher Formel kann in einer Schleife, deren Laufvariable i mit 1 inkrementiert wird
@@ -22,7 +29,8 @@ public class Rekursion {
         für 16 Schwingungen zu berechnen. (Zusatzaufgabe)
     *
     * */
-    public void main (String[] args){
-        geradeZahlen(0);
+    public static void main (String[] args){
+        Rekursion.geradeZahlen(0);
+        Rekursion.vorzeichenWechseln(0, 1);
     }
  }

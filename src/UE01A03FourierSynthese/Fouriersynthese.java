@@ -6,8 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -27,6 +26,11 @@ public class Fouriersynthese extends Application {
     private Rectangle panel;
     private Line line;
 
+    Label aufgabe_4_3;
+    ToggleGroup radioGroup;
+    RadioButton radioDreieck;
+    RadioButton radioRechteck;
+
     Label amplitude_label_description;
     Label amplitude_label_value;
     Label amplitude_faktor_label_desccriptor;
@@ -44,25 +48,42 @@ public class Fouriersynthese extends Application {
      * y = 50. * Math.sin(4 * Math.PI * i /600);
      */
 
-    double amplitude = 8.0;  // Amplitude
-    double amplitude_faktor = 1.0; // Faktor Synthese Amplitude
+    double amplitude = 50.0;  // Amplitude
     double frequenz = 4.0;
-    double frequenz_faktor = 1.0; // Faktor Synthese Frequenz
-    double synthese = 0;
     double y = 0;
     int i = 0;
 
     BorderPane controlLayout;
     VBox showControls;
 
-
-    public void wave() {
+    /**
+     * Aufgabe 3.3 - Synthese - RechteckFunktion
+     */
+    public void waveRechteck() {
         if(i > 600)
             return;
-        y = (amplitude / amplitude_faktor) * Math.sin(frequenz * frequenz_faktor * Math.PI * i / 600);
+        y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
+        y += (amplitude / 3.) * Math.sin(frequenz * 3. * Math.PI * i / 600);
+        y += (amplitude / 5.) * Math.sin(frequenz * 5. * Math.PI * i / 600);
+        y += (amplitude / 7.) * Math.sin(frequenz * 7. * Math.PI * i / 600);
         drawLine(i, (int)y) ;
         i++;
-        wave();
+        waveRechteck();
+    }
+
+    /**
+     * Aufgabe 3.4 - Synthese - Dreieckschwingung
+     */
+    public void waveDreieck() {
+        if(i > 600)
+            return;
+        y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
+        y += (amplitude / 9.) * Math.sin(frequenz * -3. * Math.PI * i / 600);
+        y += (amplitude / 25.) * Math.sin(frequenz * 5. * Math.PI * i / 600);
+        y += (amplitude / 49.) * Math.sin(frequenz * -7. * Math.PI * i / 600);
+        drawLine(i, (int) y) ;
+        i++;
+        waveDreieck();
     }
 
     public static void main(String[] args) {
@@ -87,7 +108,31 @@ public class Fouriersynthese extends Application {
         return myborder;
     }
 
-    private VBox addHbox(){
+    private void redraw(){
+        cursorX = 0;
+        cursorY = 200;
+        y = 0;
+        i = 0;
+        graph.getChildren().clear();
+        try {
+            amplitude_label_value.setText(Double.toString(amplitude).substring(0, 4));
+            frequenz_label_value.setText(Double.toString(frequenz).substring(0,4));
+        } catch (StringIndexOutOfBoundsException e) {
+            amplitude_label_value.setText(Double.toString(amplitude));
+            frequenz_label_value.setText(Double.toString(frequenz));
+        }
+        i = 0;
+        if (radioDreieck.isSelected()){
+            aufgabe_4_3.setText("Dreieck-Folge: 1, 9, 25, 49, 81, 121, ... Formel: f(n)=(n+2)^2");
+            waveDreieck();
+        }
+        if (radioRechteck.isSelected()){
+            aufgabe_4_3.setText("Rechteck-Folge: 1, 3, 5, 7, 9, 11, 13, ... Formel: f(n)=n+2");
+            waveRechteck();
+        }
+    }
+
+    private VBox addHbox() {
         VBox myvbox = new VBox();
         myvbox.setMinWidth(80);
         myvbox.setPadding(new Insets(0, 20, 0, 20));
@@ -95,22 +140,22 @@ public class Fouriersynthese extends Application {
         myvbox.setStyle("-fx-background-color: #336699;");
 
         HBox hboxAmplitudeFrequenzSliders = new HBox();
-        hboxAmplitudeFrequenzSliders.setPadding(new Insets(15, 15, 15, 12));
-        hboxAmplitudeFrequenzSliders.setSpacing(80);
+        hboxAmplitudeFrequenzSliders.setPadding(new Insets(0, 15, 15, 12));
+        hboxAmplitudeFrequenzSliders.setSpacing(130);
         hboxAmplitudeFrequenzSliders.setStyle("-fx-background-color: #336699;");
 
         HBox hboxLabelsAmplitudeFrequenz = new HBox();
-        hboxLabelsAmplitudeFrequenz.setPadding(new Insets(15, 15, 15, 12));
+        hboxLabelsAmplitudeFrequenz.setPadding(new Insets(15, 0, 15, 12));
         hboxLabelsAmplitudeFrequenz.setSpacing(10);
         hboxLabelsAmplitudeFrequenz.setStyle("-fx-background-color: #336699;");
 
         HBox hboxFaktorenSliders = new HBox();
-        hboxFaktorenSliders.setPadding(new Insets(15, 15, 15, 12));
-        hboxFaktorenSliders.setSpacing(80);
+        hboxFaktorenSliders.setPadding(new Insets(0, 15, 15, 12));
+        hboxFaktorenSliders.setSpacing(130);
         hboxFaktorenSliders.setStyle("-fx-background-color: #336699;");
 
         HBox hboxLabelsFaktoren = new HBox();
-        hboxLabelsFaktoren.setPadding(new Insets(15, 15, 15, 12));
+        hboxLabelsFaktoren.setPadding(new Insets(15, 0, 15, 12));
         hboxLabelsFaktoren.setSpacing(10);
         hboxLabelsFaktoren.setStyle("-fx-background-color: #336699;");
 
@@ -124,20 +169,8 @@ public class Fouriersynthese extends Application {
         slider_frequenz.setMax(100.0);
         slider_frequenz.setValue(frequenz);
 
-        Slider slider_amplitude_faktor = new Slider();
-        slider_amplitude_faktor.setMin(1.0);
-        slider_amplitude_faktor.setMax(8.0);
-        slider_amplitude_faktor.setBlockIncrement(1.0);
-        slider_amplitude_faktor.setValue(amplitude_faktor);
 
-        Slider slider_frequenz_faktor = new Slider();
-        slider_frequenz_faktor.setMin(1.0);
-        slider_frequenz_faktor.setMax(8.0);
-        slider_frequenz_faktor.setBlockIncrement(1.0);
-        slider_frequenz_faktor.setValue(frequenz_faktor);
-
-
-        amplitude_label_description = new Label("Amplitude");
+        amplitude_label_description = new Label("Amplitude: a=");
         amplitude_label_description.setTextFill(Color.WHITE);
         amplitude_label_description.setFont(new Font("Arial", 20));
         amplitude_label_description.setPadding(new Insets(0, 0, 0, 5));
@@ -146,16 +179,7 @@ public class Fouriersynthese extends Application {
         amplitude_label_value.setTextFill(Color.WHITE);
         amplitude_label_value.setFont(new Font("Arial", 20));
 
-        amplitude_faktor_label_desccriptor = new Label("Faktor Amplitude");
-        amplitude_faktor_label_desccriptor.setTextFill(Color.WHITE);
-        amplitude_faktor_label_desccriptor.setFont(new Font("Arial", 20));
-        amplitude_faktor_label_desccriptor.setPadding(new Insets(0, 0, 0, 5));
-
-        amplitude_faktor_label_value = new Label("1.0/" + Double.toString(slider_amplitude_faktor.getValue()));
-        amplitude_faktor_label_value.setTextFill(Color.WHITE);
-        amplitude_faktor_label_value.setFont(new Font("Arial", 20));
-
-        frequenz_label_description = new Label("Frequenz");
+        frequenz_label_description = new Label("Frequenz: f=");
         frequenz_label_description.setTextFill(Color.WHITE);
         frequenz_label_description.setFont(new Font("Arial", 20));
         frequenz_label_description.setPadding(new Insets(0, 0, 0, 80));
@@ -164,105 +188,61 @@ public class Fouriersynthese extends Application {
         frequenz_label_value.setTextFill(Color.WHITE);
         frequenz_label_value.setFont(new Font("Arial", 20));
 
-        frequenz_faktor_label_descriptor = new Label("Faktor Frequenz");
+        frequenz_faktor_label_descriptor = new Label("Faktor F.: f_faktor=");
         frequenz_faktor_label_descriptor.setTextFill(Color.WHITE);
         frequenz_faktor_label_descriptor.setFont(new Font("Arial", 20));
         frequenz_faktor_label_descriptor.setPadding(new Insets(0, 0, 0, 5));
-
-        frequenz_faktor_label_value = new Label(Double.toString(slider_frequenz_faktor.getValue()));
-        frequenz_faktor_label_value.setTextFill(Color.WHITE);
-        frequenz_faktor_label_value.setFont(new Font("Arial", 20));
 
         hboxAmplitudeFrequenzSliders.getChildren().addAll(slider_amplitude, slider_frequenz);
         hboxLabelsAmplitudeFrequenz.getChildren().addAll(amplitude_label_description, amplitude_label_value,
                 frequenz_label_description, frequenz_label_value);
 
-        hboxFaktorenSliders.getChildren().addAll(slider_amplitude_faktor, slider_frequenz_faktor);
-        hboxLabelsFaktoren.getChildren().addAll(amplitude_faktor_label_desccriptor, amplitude_faktor_label_value,
-                frequenz_faktor_label_descriptor, frequenz_faktor_label_value);
-
-        slider_amplitude_faktor.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                cursorX = 0;
-                cursorY = 200;
-                y = 0;
-                i = 0;
-                graph.getChildren().clear();
-                amplitude_faktor = (double) newValue;
-                try {
-                    amplitude_faktor_label_value.setText("1.0/" + Double.toString(amplitude_faktor).substring(0, 4));
-                } catch (StringIndexOutOfBoundsException e) {
-                    amplitude_faktor_label_value.setText("1.0/" + Double.toString(amplitude_faktor));
-                }
-                i = 0;
-                wave();
-            }
-        });
-
-        slider_frequenz_faktor.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                cursorX = 0;
-                cursorY = 200;
-                y = 0;
-                i = 0;
-                graph.getChildren().clear();
-                frequenz_faktor = (double) newValue;
-                try {
-                    frequenz_faktor_label_value.setText(Double.toString(frequenz_faktor).substring(0, 4));
-                } catch (StringIndexOutOfBoundsException e) {
-                    frequenz_faktor_label_value.setText(Double.toString(frequenz_faktor));
-                }
-                i = 0;
-                wave();
-            }
-        });
-
         slider_amplitude.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
-                cursorX = 0;
-                cursorY = 200;
-                y = 0;
-                i = 0;
                 amplitude = (double) new_val;
-                graph.getChildren().clear();
-                try {
-                    amplitude_label_value.setText(Double.toString(amplitude).substring(0, 4));
-                } catch (StringIndexOutOfBoundsException e) {
-                    amplitude_label_value.setText(Double.toString(amplitude));
-                }
-                i = 0;
-                wave();
+                redraw();
             }
         });
 
         slider_frequenz.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
-                cursorX = 0;
-                cursorY = 200;
-                y = 0;
-                i=0;
                 frequenz = (double) new_val;
-                graph.getChildren().clear();
-
-
-                try {
-                    frequenz_label_value.setText(Double.toString(frequenz).substring(0, 4));
-                } catch (StringIndexOutOfBoundsException e){
-                    frequenz_label_value.setText(Double.toString(frequenz));
-                }
-                i=0;
-                wave();
+                redraw();
             }
         });
 
-        myvbox.getChildren().add(hboxAmplitudeFrequenzSliders);
+        radioGroup = new ToggleGroup();
+
+        radioDreieck = new RadioButton ("Dreieck");
+        radioDreieck.setTextFill(Color.WHITE);
+        radioDreieck.setSelected(true);
+        radioDreieck.setToggleGroup(radioGroup);
+
+        radioRechteck = new RadioButton("Rechteck");
+        radioRechteck.setTextFill(Color.WHITE);
+        radioRechteck.setToggleGroup(radioGroup);
+
+        radioGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                redraw();
+            }
+        });
+
+        aufgabe_4_3 = new Label ("Rechteck-Folge: 1, 3, 5, 7, 9, 11, 13, ... Formel: f(n)=n+2");
+        aufgabe_4_3.setTextFill(Color.WHITE);
+        aufgabe_4_3.setFont(new Font("Arial", 20));
+        aufgabe_4_3.setPadding(new Insets(0, 0, 0, 5));
+
+        myvbox.getChildren().add(aufgabe_4_3);
         myvbox.getChildren().add(hboxLabelsAmplitudeFrequenz);
-        myvbox.getChildren().add(hboxFaktorenSliders);
+        myvbox.getChildren().add(hboxAmplitudeFrequenzSliders);
         myvbox.getChildren().add(hboxLabelsFaktoren);
+        myvbox.getChildren().add(hboxFaktorenSliders);
+        myvbox.getChildren().add(radioDreieck);
+        myvbox.getChildren().add(radioRechteck);
         return myvbox;
     }
 
@@ -293,11 +273,9 @@ public class Fouriersynthese extends Application {
 
         primaryStage.show();
 
-        amplitude = 8.0;
+        amplitude = 50.0;
         frequenz = 4.0;
-        frequenz_faktor = 1.0;
-        amplitude_faktor = 1.0;
         i=0;
-        wave();
+        redraw();
     }
 }
