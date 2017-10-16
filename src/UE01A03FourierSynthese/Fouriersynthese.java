@@ -27,43 +27,42 @@ public class Fouriersynthese extends Application {
     private Rectangle panel;
     private Line line;
 
-    Label f_label_description;
-    Label f_label_value;
-    Label b_label_description;
-    Label b_label_value;
+    Label amplitude_label_description;
+    Label amplitude_label_value;
+    Label amplitude_faktor_label_desccriptor;
+    Label amplitude_faktor_label_value;
+    Label frequenz_label_description;
+    Label frequenz_label_value;
+    Label frequenz_faktor_label_descriptor;
+    Label frequenz_faktor_label_value;
 
 
     int cursorX = 0;
     int cursorY = 200;
 
-    double f;
-    double b;
-
-
     /**
      * y = 50. * Math.sin(4 * Math.PI * i /600);
      */
 
-    double amplitude = 8;  // Amplitude
+    double amplitude = 8.0;  // Amplitude
+    double amplitude_faktor = 1.0; // Faktor Synthese Amplitude
+    double frequenz = 4.0;
+    double frequenz_faktor = 1.0; // Faktor Synthese Frequenz
+    double synthese = 0;
     double y = 0;
     int i = 0;
 
     BorderPane controlLayout;
     VBox showControls;
-    Slider my_slider_f_val;
-    Slider my_slider_b_val;
 
 
-    public void wave(double f, double b) {
-        amplitude = f;
+    public void wave() {
         if(i > 600)
             return;
-        y = amplitude * Math.sin(4 * Math.PI * i / 600);
-
-        System.out.println(i + " " + (int)y );
+        y = (amplitude / amplitude_faktor) * Math.sin(frequenz * frequenz_faktor * Math.PI * i / 600);
         drawLine(i, (int)y) ;
         i++;
-        wave(f, b);
+        wave();
     }
 
     public static void main(String[] args) {
@@ -95,91 +94,175 @@ public class Fouriersynthese extends Application {
         myvbox.setSpacing(0);
         myvbox.setStyle("-fx-background-color: #336699;");
 
-        HBox myhboxSliders = new HBox();
-        myhboxSliders.setPadding(new Insets(15, 15, 0, 12));
-        myhboxSliders.setSpacing(10);
-        myhboxSliders.setStyle("-fx-background-color: #336699;");
+        HBox hboxAmplitudeFrequenzSliders = new HBox();
+        hboxAmplitudeFrequenzSliders.setPadding(new Insets(15, 15, 15, 12));
+        hboxAmplitudeFrequenzSliders.setSpacing(80);
+        hboxAmplitudeFrequenzSliders.setStyle("-fx-background-color: #336699;");
 
-        HBox myhboxLabels = new HBox();
-        myhboxLabels.setPadding(new Insets(15, 15, 15, 12));
-        myhboxLabels.setSpacing(10);
-        myhboxLabels.setStyle("-fx-background-color: #336699;");
+        HBox hboxLabelsAmplitudeFrequenz = new HBox();
+        hboxLabelsAmplitudeFrequenz.setPadding(new Insets(15, 15, 15, 12));
+        hboxLabelsAmplitudeFrequenz.setSpacing(10);
+        hboxLabelsAmplitudeFrequenz.setStyle("-fx-background-color: #336699;");
 
-        Slider my_slider_f_val = new Slider();
-        my_slider_f_val.setMin(1.91);
-        my_slider_f_val.setMax(1.99);
-        my_slider_f_val.setValue(f);
+        HBox hboxFaktorenSliders = new HBox();
+        hboxFaktorenSliders.setPadding(new Insets(15, 15, 15, 12));
+        hboxFaktorenSliders.setSpacing(80);
+        hboxFaktorenSliders.setStyle("-fx-background-color: #336699;");
 
-        Slider my_slider_b_val = new Slider();
-        my_slider_b_val.setMin(0.91);
-        my_slider_b_val.setMax(1.0);
-        my_slider_b_val.setValue(b);
+        HBox hboxLabelsFaktoren = new HBox();
+        hboxLabelsFaktoren.setPadding(new Insets(15, 15, 15, 12));
+        hboxLabelsFaktoren.setSpacing(10);
+        hboxLabelsFaktoren.setStyle("-fx-background-color: #336699;");
 
-        f_label_description = new Label("f:");
-        f_label_description.setTextFill(Color.WHITE);
-        f_label_description.setFont(new Font("Arial", 20));
-        f_label_description.setPadding(new Insets(0, 0, 0, 5));
+        Slider slider_amplitude = new Slider();
+        slider_amplitude.setMin(0.0);
+        slider_amplitude.setMax(100.0);
+        slider_amplitude.setValue(amplitude);
 
-        f_label_value = new Label(Double.toString(my_slider_f_val.getValue()));
-        f_label_value.setTextFill(Color.WHITE);
-        f_label_value.setFont(new Font("Arial", 20));
+        Slider slider_frequenz = new Slider();
+        slider_frequenz.setMin(0.0);
+        slider_frequenz.setMax(100.0);
+        slider_frequenz.setValue(frequenz);
 
-        b_label_description = new Label("b:");
-        b_label_description.setTextFill(Color.WHITE);
-        b_label_description.setFont(new Font("Arial", 20));
-        b_label_description.setPadding(new Insets(0, 0, 0, 80));
+        Slider slider_amplitude_faktor = new Slider();
+        slider_amplitude_faktor.setMin(1.0);
+        slider_amplitude_faktor.setMax(8.0);
+        slider_amplitude_faktor.setBlockIncrement(1.0);
+        slider_amplitude_faktor.setValue(amplitude_faktor);
 
-        b_label_value = new Label(Double.toString(my_slider_b_val.getValue()));
-        b_label_value.setTextFill(Color.WHITE);
-        b_label_value.setFont(new Font("Arial", 20));
+        Slider slider_frequenz_faktor = new Slider();
+        slider_frequenz_faktor.setMin(1.0);
+        slider_frequenz_faktor.setMax(8.0);
+        slider_frequenz_faktor.setBlockIncrement(1.0);
+        slider_frequenz_faktor.setValue(frequenz_faktor);
 
-        myhboxSliders.getChildren().addAll(my_slider_f_val, my_slider_b_val);
-        myhboxLabels.getChildren().addAll(f_label_description, f_label_value, b_label_description, b_label_value);
 
-        my_slider_f_val.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
+        amplitude_label_description = new Label("Amplitude");
+        amplitude_label_description.setTextFill(Color.WHITE);
+        amplitude_label_description.setFont(new Font("Arial", 20));
+        amplitude_label_description.setPadding(new Insets(0, 0, 0, 5));
+
+        amplitude_label_value = new Label(Double.toString(slider_amplitude.getValue()));
+        amplitude_label_value.setTextFill(Color.WHITE);
+        amplitude_label_value.setFont(new Font("Arial", 20));
+
+        amplitude_faktor_label_desccriptor = new Label("Faktor Amplitude");
+        amplitude_faktor_label_desccriptor.setTextFill(Color.WHITE);
+        amplitude_faktor_label_desccriptor.setFont(new Font("Arial", 20));
+        amplitude_faktor_label_desccriptor.setPadding(new Insets(0, 0, 0, 5));
+
+        amplitude_faktor_label_value = new Label("1.0/" + Double.toString(slider_amplitude_faktor.getValue()));
+        amplitude_faktor_label_value.setTextFill(Color.WHITE);
+        amplitude_faktor_label_value.setFont(new Font("Arial", 20));
+
+        frequenz_label_description = new Label("Frequenz");
+        frequenz_label_description.setTextFill(Color.WHITE);
+        frequenz_label_description.setFont(new Font("Arial", 20));
+        frequenz_label_description.setPadding(new Insets(0, 0, 0, 80));
+
+        frequenz_label_value = new Label(Double.toString(slider_frequenz.getValue()));
+        frequenz_label_value.setTextFill(Color.WHITE);
+        frequenz_label_value.setFont(new Font("Arial", 20));
+
+        frequenz_faktor_label_descriptor = new Label("Faktor Frequenz");
+        frequenz_faktor_label_descriptor.setTextFill(Color.WHITE);
+        frequenz_faktor_label_descriptor.setFont(new Font("Arial", 20));
+        frequenz_faktor_label_descriptor.setPadding(new Insets(0, 0, 0, 5));
+
+        frequenz_faktor_label_value = new Label(Double.toString(slider_frequenz_faktor.getValue()));
+        frequenz_faktor_label_value.setTextFill(Color.WHITE);
+        frequenz_faktor_label_value.setFont(new Font("Arial", 20));
+
+        hboxAmplitudeFrequenzSliders.getChildren().addAll(slider_amplitude, slider_frequenz);
+        hboxLabelsAmplitudeFrequenz.getChildren().addAll(amplitude_label_description, amplitude_label_value,
+                frequenz_label_description, frequenz_label_value);
+
+        hboxFaktorenSliders.getChildren().addAll(slider_amplitude_faktor, slider_frequenz_faktor);
+        hboxLabelsFaktoren.getChildren().addAll(amplitude_faktor_label_desccriptor, amplitude_faktor_label_value,
+                frequenz_faktor_label_descriptor, frequenz_faktor_label_value);
+
+        slider_amplitude_faktor.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 cursorX = 0;
                 cursorY = 200;
-                amplitude = 8;  // Amplitude
                 y = 0;
                 i = 0;
-                f = (double) new_val;
                 graph.getChildren().clear();
+                amplitude_faktor = (double) newValue;
                 try {
-                    f_label_value.setText(Double.toString(f).substring(0,4));
-                } catch (StringIndexOutOfBoundsException e){
-                    f_label_value.setText(Double.toString(f));
+                    amplitude_faktor_label_value.setText("1.0/" + Double.toString(amplitude_faktor).substring(0, 4));
+                } catch (StringIndexOutOfBoundsException e) {
+                    amplitude_faktor_label_value.setText("1.0/" + Double.toString(amplitude_faktor));
                 }
-
-                wave(f, 0.99);
+                i = 0;
+                wave();
             }
         });
 
-        my_slider_b_val.valueProperty().addListener(new ChangeListener<Number>() {
+        slider_frequenz_faktor.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                cursorX = 0;
+                cursorY = 200;
+                y = 0;
+                i = 0;
+                graph.getChildren().clear();
+                frequenz_faktor = (double) newValue;
+                try {
+                    frequenz_faktor_label_value.setText(Double.toString(frequenz_faktor).substring(0, 4));
+                } catch (StringIndexOutOfBoundsException e) {
+                    frequenz_faktor_label_value.setText(Double.toString(frequenz_faktor));
+                }
+                i = 0;
+                wave();
+            }
+        });
+
+        slider_amplitude.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
                 cursorX = 0;
                 cursorY = 200;
-                amplitude = 8;  // Amplitude
+                y = 0;
+                i = 0;
+                amplitude = (double) new_val;
+                graph.getChildren().clear();
+                try {
+                    amplitude_label_value.setText(Double.toString(amplitude).substring(0, 4));
+                } catch (StringIndexOutOfBoundsException e) {
+                    amplitude_label_value.setText(Double.toString(amplitude));
+                }
+                i = 0;
+                wave();
+            }
+        });
+
+        slider_frequenz.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                cursorX = 0;
+                cursorY = 200;
                 y = 0;
                 i=0;
-                b = (double) new_val;
+                frequenz = (double) new_val;
                 graph.getChildren().clear();
 
 
                 try {
-                    b_label_value.setText(Double.toString(b).substring(0,4));
+                    frequenz_label_value.setText(Double.toString(frequenz).substring(0, 4));
                 } catch (StringIndexOutOfBoundsException e){
-                    b_label_value.setText(Double.toString(b));
+                    frequenz_label_value.setText(Double.toString(frequenz));
                 }
-
-                wave(f, b);
+                i=0;
+                wave();
             }
         });
 
-        myvbox.getChildren().add(myhboxSliders);
-        myvbox.getChildren().add(myhboxLabels);
+        myvbox.getChildren().add(hboxAmplitudeFrequenzSliders);
+        myvbox.getChildren().add(hboxLabelsAmplitudeFrequenz);
+        myvbox.getChildren().add(hboxFaktorenSliders);
+        myvbox.getChildren().add(hboxLabelsFaktoren);
         return myvbox;
     }
 
@@ -187,15 +270,12 @@ public class Fouriersynthese extends Application {
     public void start(Stage primaryStage) throws Exception {
         // TODO Auto-generated method stub
 
-        f = 1.99;
-        b = 0.99;
-
         root = new VBox(10);
         graph = new Group();
         showControls = addHbox();
         controlLayout = new BorderPane();
 
-        controlLayout.setPrefSize(600,400);
+        controlLayout.setPrefSize(600, 400);
         controlLayout.setStyle("-fx-border-color: white;");
 
         panel = new Rectangle(600, 400, Color.WHITESMOKE);
@@ -206,11 +286,18 @@ public class Fouriersynthese extends Application {
         root.getChildren().add(showControls);
         root.getChildren().add(controlLayout);
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 600, 600);
 
         primaryStage.setTitle("Scribble");
         primaryStage.setScene(scene);
 
         primaryStage.show();
+
+        amplitude = 8.0;
+        frequenz = 4.0;
+        frequenz_faktor = 1.0;
+        amplitude_faktor = 1.0;
+        i=0;
+        wave();
     }
 }
