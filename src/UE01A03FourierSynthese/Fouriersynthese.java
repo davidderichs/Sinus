@@ -62,7 +62,6 @@ public class Fouriersynthese extends Application {
     public void waveRechteck() {
         if(i > 600)
             return;
-
         /**
          * Zusatzaufgabe: Eine Schleife, die 16-Mal die Faktoren errechnet.
          * Nach der Formel, die ich mir ausgedacht hab. Abhaengig von n.
@@ -71,9 +70,9 @@ public class Fouriersynthese extends Application {
          *
          */
         y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
-        y += (amplitude / 3.) * Math.sin(frequenz * 3. * Math.PI * i / 600);
-        y += (amplitude / 5.) * Math.sin(frequenz * 5. * Math.PI * i / 600);
-        y += (amplitude / 7.) * Math.sin(frequenz * 7. * Math.PI * i / 600);
+        for (int n=3; n<=33; n+=2){
+            y += (amplitude / (double) n) * Math.sin(frequenz * (double) n * Math.PI * i / 600);
+        }
         drawLine(i, (int)y) ;
         i++;
         waveRechteck();
@@ -94,9 +93,17 @@ public class Fouriersynthese extends Application {
          *
          */
         y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
-        y += (amplitude / 9.) * Math.sin(frequenz * -3. * Math.PI * i / 600);
-        y += (amplitude / 25.) * Math.sin(frequenz * 5. * Math.PI * i / 600);
-        y += (amplitude / 49.) * Math.sin(frequenz * -7. * Math.PI * i / 600);
+        int m = -1;
+        for (int n=3; n<=33; n+=2){
+            System.out.println(Math.pow(n,2));
+            System.out.println((double) (n*m));
+            y += (amplitude / Math.pow(n,2)) * Math.sin(frequenz * ((double) (n*m) ) * Math.PI * i / 600);
+            m=-m;
+        }
+//        y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
+//        y += (amplitude / 9.) * Math.sin(frequenz * -3. * Math.PI * i / 600);
+//        y += (amplitude / 25.) * Math.sin(frequenz * 5. * Math.PI * i / 600);
+//        y += (amplitude / 49.) * Math.sin(frequenz * -7. * Math.PI * i / 600);
         drawLine(i, (int) y) ;
         i++;
         waveDreieck();
@@ -139,11 +146,16 @@ public class Fouriersynthese extends Application {
         }
         i = 0;
         if (radioDreieck.isSelected()){
-            aufgabe_4_3.setText("Dreieck-Folge: 1, 9, 25, 49, 81, 121, ... Formel: f(n)=(n+2)^2");
+            aufgabe_4_3.setText("Dreieck-Folge: 1, 9, 25, 49, 81, 121, ... Formel: a(n)=n^2 f(n)=+-n");
+            /**
+             *             System.out.println(Math.pow(n,2));
+             System.out.println((double) (n*m));
+             *
+             */
             waveDreieck();
         }
         if (radioRechteck.isSelected()){
-            aufgabe_4_3.setText("Rechteck-Folge: 1, 3, 5, 7, 9, 11, 13, ... Formel: f(n)=n+2");
+            aufgabe_4_3.setText("Rechteck-Folge: 1, 3, 5, 7, 9, 11, 13, ... Formel: a_b(n)=n+2 fuer n_0 = 1");
             waveRechteck();
         }
     }
