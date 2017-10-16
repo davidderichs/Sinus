@@ -62,6 +62,14 @@ public class Fouriersynthese extends Application {
     public void waveRechteck() {
         if(i > 600)
             return;
+
+        /**
+         * Zusatzaufgabe: Eine Schleife, die 16-Mal die Faktoren errechnet.
+         * Nach der Formel, die ich mir ausgedacht hab. Abhaengig von n.
+         *
+         * Hier ist es ja nur drei-mal gemacht worden, wird dadurch einfach genauer.
+         *
+         */
         y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
         y += (amplitude / 3.) * Math.sin(frequenz * 3. * Math.PI * i / 600);
         y += (amplitude / 5.) * Math.sin(frequenz * 5. * Math.PI * i / 600);
@@ -77,6 +85,14 @@ public class Fouriersynthese extends Application {
     public void waveDreieck() {
         if(i > 600)
             return;
+
+        /**
+         * Zusatzaufgabe: Eine Schleife, die 16-Mal die Faktoren errechnet.
+         * Nach der Formel, die ich mir ausgedacht hab. Abhaengig von n.
+         *
+         * Hier ist es ja nur drei-mal gemacht worden, wird dadurch einfach genauer.
+         *
+         */
         y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
         y += (amplitude / 9.) * Math.sin(frequenz * -3. * Math.PI * i / 600);
         y += (amplitude / 25.) * Math.sin(frequenz * 5. * Math.PI * i / 600);
