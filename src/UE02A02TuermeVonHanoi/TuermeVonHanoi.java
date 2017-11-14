@@ -15,7 +15,6 @@ public class TuermeVonHanoi {
             hanoi(N-1, hilfsplatz, platz1, platz2);
         }
     }
-    public static void main(String[] args) {
-        hanoi(4, "A", "B", "C");
-    }
 }
+
+
