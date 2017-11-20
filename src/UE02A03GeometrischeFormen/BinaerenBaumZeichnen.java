@@ -21,41 +21,24 @@ public class BinaerenBaumZeichnen extends Application {
         Group root = new Group();
         Canvas canvas = new Canvas(800, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawShapes(gc, 400, 600, 0);
+        drawShapes(gc, 400, 0, 90, 100, 0);
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
-    private void drawShapes(GraphicsContext gc,int x, int y, int i) {
-        if (i==7) return;
-    	gc.setStroke(Color.BLUE);
+    private void drawShapes(GraphicsContext gc, double xAlt, double yAlt, double a, double laenge, int i) {
+        System.out.println(i);
+        if (i >= 7) return;
+        gc.setStroke(Color.BLUE);
         gc.setLineWidth(1);
-        drawPixelsNormal(gc, x, y, 0);
-        drawPixelsDiagonalLinks(gc, x, y-100, 0);
-        drawPixelsDiagonalRechts(gc, x, y-100, 0);
-        i++;
-        
-    }     
-    
-    private void drawPixelsNormal(GraphicsContext gc, int x, int y, int n) {
-    	if (n==99)return;
-        gc.strokeLine(x, y, x, y);
-        drawPixelsNormal(gc, x, --y, ++n);
+        double xNeu;
+        double yNeu;
+
+        xNeu = (laenge * Math.cos(a * Math.PI / 180));
+        yNeu = (laenge * Math.sin(a*Math.PI/180));
+        gc.strokeLine(xAlt, 600 - yAlt, xAlt + xNeu, 600 - (yAlt + yNeu));
+        drawShapes(gc, xAlt + xNeu, yAlt + yNeu, a+45, laenge/2, i+1);
+        drawShapes(gc, xAlt + xNeu, yAlt + yNeu, a-45, laenge/2, i+1);
     }
-    
-    private void drawPixelsDiagonalLinks(GraphicsContext gc, int x, int y, int n) {
-    	if (n==99)return;
-        gc.strokeLine(x, y, x, y);
-        n++;
-        drawPixelsDiagonalLinks(gc, --x, --y, n);
-    }
-    
-    private void drawPixelsDiagonalRechts(GraphicsContext gc, int x, int y, int n) {
-    	if (n==99)return;
-        gc.strokeLine(x, y, x, y);
-        n++;
-        drawPixelsDiagonalRechts(gc, ++x, --y, n);
-    }
-    
 }
