@@ -1,12 +1,12 @@
 package UE02A03GeometrischeFormen;
 
         import javafx.application.Application;
-        import javafx.scene.Group;
-        import javafx.scene.Scene;
-        import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
         import javafx.scene.paint.Color;
         import javafx.stage.Stage;
-        import javafx.scene.canvas.Canvas;
 
 /***
  * Implementation of a snowflake-shaped figure being drawn on a JavaFX-Canvas.
@@ -33,6 +33,8 @@ public class Schneeflocke extends Application {
         Group root = new Group();
         Canvas canvas = new Canvas(800, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(1);
         drawShapes(gc, 400, 300, 50, 0, 0);
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root));
@@ -50,8 +52,6 @@ public class Schneeflocke extends Application {
      */
     private void drawShapes(GraphicsContext gc, double posX, double posY, double laenge, double a, int n) {
         if(n>2) return;
-        gc.setStroke(Color.BLUE);
-        gc.setLineWidth(1);
         n=n+1;
 
         double xNeu = laenge * Math.cos(a+45 * Math.PI / 180);
