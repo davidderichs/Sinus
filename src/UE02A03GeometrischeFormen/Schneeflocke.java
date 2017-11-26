@@ -8,43 +8,71 @@ package UE02A03GeometrischeFormen;
         import javafx.stage.Stage;
         import javafx.scene.canvas.Canvas;
 
+/***
+ * Implementation of a snowflake-shaped figure being drawn on a JavaFX-Canvas.
+ * Thus being four crossed lines drawn from the same origin x-y-coordinates.
+ * Then being drawn again on each end-point of either of these lines with a length of 0.33px
+ */
 public class Schneeflocke extends Application {
 
-
+    /***
+     * Starts the Application.
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /***
+     * Sets up the JavaFX-Elements and calls sequence to draw a snlowflake-shaped figure.
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Drawing Operations Test");
         Group root = new Group();
         Canvas canvas = new Canvas(800, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawShapes(gc, 400, 300, 0, 100, 0);
+        drawShapes(gc, 400, 300, 50, 0, 0);
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
-    private void drawShapes(GraphicsContext gc, double xAlt, double yAlt, double a, double laenge, int i) {
-        System.out.println(i);
-        if (i >= 6) return;
+    /***
+     * Recursive Method, which draws a snowflake-shaped figure until recursive depth is reached.
+     * @param gc Graphics-Element to be drawn on.
+     * @param posX X-Coordinate of the current recursive stack.
+     * @param posY Y-Coordinate of the current recursive stack.
+     * @param laenge length of the lines to be drawn.
+     * @param a Starting angle to be used to rotate the current shape.
+     * @param n Recursive depth counter.
+     */
+    private void drawShapes(GraphicsContext gc, double posX, double posY, double laenge, double a, int n) {
+        if(n>2) return;
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(1);
-        double xNeu;
-        double yNeu;
+        n=n+1;
 
-        xNeu = (laenge * Math.cos(a * Math.PI / 180));
-        yNeu = (laenge * Math.sin(a * Math.PI / 180));
-        gc.strokeLine(xAlt, 600 - yAlt, xAlt + xNeu, 600 - (yAlt + yNeu));
+        double xNeu = laenge * Math.cos(a+45 * Math.PI / 180);
+        double yNeu = laenge * Math.sin(a+45 * Math.PI / 180);
+        gc.strokeLine(posX, posY, posX + xNeu, posY - yNeu);
+        drawShapes(gc, posX + xNeu, posY - yNeu, laenge*0.33, a + 315, n);
 
-        drawShapes(gc, xAlt, yAlt, a+60, laenge, i+1);
-        drawShapes(gc, xAlt, yAlt, a+120, laenge, i+1);
-        drawShapes(gc, xAlt, yAlt, a+180, laenge, i+1);
-        drawShapes(gc, xAlt, yAlt, a+240, laenge, i+1);
-        drawShapes(gc, xAlt, yAlt, a+300, laenge, i+1);
-        drawShapes(gc, xAlt, yAlt, a+360, laenge, i+1);
+        xNeu = laenge * Math.cos(a + 135 * Math.PI / 180);
+        yNeu = laenge * Math.sin(a+135 * Math.PI / 180);
+        gc.strokeLine(posX, posY, posX + xNeu, posY - yNeu);
+        drawShapes(gc, posX + xNeu, posY - yNeu, laenge*0.33, a + 315, n);
+
+        xNeu = laenge * Math.cos(a + 225 * Math.PI / 180);
+        yNeu = laenge * Math.sin(a+225 * Math.PI / 180);
+        gc.strokeLine(posX, posY, posX + xNeu, posY - yNeu);
+        drawShapes(gc, posX+xNeu, posY-yNeu, laenge*0.33, a+315, n);
+
+        xNeu = laenge * Math.cos(a + 315 * Math.PI / 180);
+        yNeu = laenge * Math.sin(a+315 * Math.PI / 180);
+        gc.strokeLine(posX, posY, posX+xNeu, posY-yNeu);
+        drawShapes(gc, posX+xNeu, posY-yNeu, laenge*0.33, a+315, n);
 
     }
 }

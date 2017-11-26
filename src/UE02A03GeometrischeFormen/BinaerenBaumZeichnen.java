@@ -8,13 +8,23 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.canvas.Canvas;
 
+/***
+ * Implementation of a binary  tree being drawn on a JavaFX-Canvas.
+ */
 public class BinaerenBaumZeichnen extends Application {
 
-	
+    /***
+     * Starts the Application.
+     * @param args
+     */
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+    /***
+     * Sets up the JavaFX-Elements and calls sequence to draw a binary-tree.
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Drawing Operations Test");
@@ -27,6 +37,15 @@ public class BinaerenBaumZeichnen extends Application {
         primaryStage.show();
     }
 
+    /***
+     * Recursive Method, which draws a binary tree until recursive depth is reached.
+     * @param gc Graphics-Element to be drawn on.
+     * @param xAlt X-Coordinate of the current binary graph.
+     * @param yAlt Y-Coordinate of the current binary graph.
+     * @param a angle which is used to rotate before drawing a new line.
+     * @param laenge Lenth of each leaf.
+     * @param i Depth counter.
+     */
     private void drawShapes(GraphicsContext gc, double xAlt, double yAlt, double a, double laenge, int i) {
         System.out.println(i);
         if (i >= 7) return;
