@@ -50,9 +50,13 @@ public class Funktionsgenerator extends Application {
      */
 
     double amplitude = 50.0;  // Amplitude
-    double frequenz = 4.0;
+    double frequenz = 1.0;
     double y = 0;
     int i = 0;
+    int lastX = 0;
+    int lastY = 0;
+    int periodendauer = 300/((int)frequenz*4);
+    int dreieckInkrement = periodendauer;
 
     BorderPane controlLayout;
     VBox showControls;
@@ -62,7 +66,6 @@ public class Funktionsgenerator extends Application {
         if(i > 600)
             return;
         double y = amplitude * Math.sin(frequenz * Math.toRadians((double)i));
-        System.out.println(i + " " + y );
         drawPixel(i, (int) y) ;
         i++;
         waveSinus();
@@ -76,7 +79,7 @@ public class Funktionsgenerator extends Application {
         int scale = 600/(int)frequenz;
         drawLine(i, 0, i, vorZ*(int)amplitude) ;
         drawLine(i, vorZ*(int)amplitude, i+scale, vorZ*(int)amplitude);
-        drawLine(i+scale, 0, i+scale, vorZ*(int)amplitude) ;
+        drawLine(i + scale, 0, i + scale, vorZ * (int) amplitude) ;
         i+=scale;
         waveRechteck(-vorZ);
     }
@@ -96,19 +99,19 @@ public class Funktionsgenerator extends Application {
          *
          */
         y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
-//        int m = -1;
-//        for (int n=3; n<=33; n+=2){
-//            System.out.println(Math.pow(n,2));
-//            System.out.println((double) (n*m));
-//            y += (amplitude / Math.pow(n,2)) * Math.sin(frequenz * ((double) (n*m) ) * Math.PI * i / 600);
-//            m=-m;
-//        }
-//        y = (amplitude) * Math.sin(frequenz * Math.PI * i / 600);
-//        y += (amplitude / 9.) * Math.sin(frequenz * -3. * Math.PI * i / 600);
-//        y += (amplitude / 25.) * Math.sin(frequenz * 5. * Math.PI * i / 600);
-//        y += (amplitude / 49.) * Math.sin(frequenz * -7. * Math.PI * i / 600);
-        drawPixel(i, (int) y) ;
-        i=i+200;
+        int m = -1;
+        for (int n=3; n<=33; n+=2){
+            y += (amplitude / Math.pow(n,2)) * Math.sin(frequenz * ((double) (n*m) ) * Math.PI * i / 600);
+            m=-m;
+        }
+        if(i==dreieckInkrement){
+            drawLine(lastX, 200 - lastY, i, 200 - (int) y);
+            lastX = i;
+            lastY = (int)y;
+            dreieckInkrement+=periodendauer;
+            System.out.println("t neu: " + dreieckInkrement);
+        }
+        i++;
         waveDreieck();
     }
 
@@ -235,6 +238,10 @@ public class Funktionsgenerator extends Application {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
                 amplitude = (double) new_val;
+                lastX = 0;
+                lastY = 0;
+                periodendauer = 300/((int)frequenz*4);
+                dreieckInkrement = periodendauer;
                 redraw();
             }
         });
@@ -243,6 +250,10 @@ public class Funktionsgenerator extends Application {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
                 frequenz = (double) new_val;
+                lastX = 0;
+                lastY = 0;
+                periodendauer = 300/((int)frequenz*4);
+                dreieckInkrement = periodendauer;
                 redraw();
             }
         });
