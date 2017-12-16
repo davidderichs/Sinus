@@ -3,6 +3,8 @@ package UE03A01ThreadingTuermeVonHanoi;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -72,6 +74,8 @@ public class GuiThreadedTuermeVonHanoi extends Application{
 	static ArrayList<UE03A01ThreadingTuermeVonHanoi.HanoiScheibe> hanoiScheiben;
 	static ArrayList<HanoiStapel> hanoiStapel;
 
+	private Thread thread;
+
 
 
 	public static void main(String[] args) {
@@ -103,15 +107,19 @@ public class GuiThreadedTuermeVonHanoi extends Application{
 		magicButton = new Button();
 		magicButton.setText("let the magic happen");
 		magicButton.setMinWidth(190.0);
+
 		magicButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				try {
-					hanoi(4, "A", "B", "C");
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				Task<Void> t = new Task<Void>(){
+					public Void call() {
+						hanoi(4, "A", "B", "C");
+						return null;
+					}
+				};
+				Thread thread = new Thread(t);
+				thread.start();
 			}
 		});
 		resetButton = new Button();
@@ -342,10 +350,10 @@ public class GuiThreadedTuermeVonHanoi extends Application{
 
 	private void legeDatenFest() {
 		hanoiScheiben = new ArrayList<UE03A01ThreadingTuermeVonHanoi.HanoiScheibe>();
-		hanoiScheiben.add(new UE03A01ThreadingTuermeVonHanoi.HanoiScheibe(1, "A", 1, "red"));
-		hanoiScheiben.add(new UE03A01ThreadingTuermeVonHanoi.HanoiScheibe(2, "A", 2, "green"));
-		hanoiScheiben.add(new UE03A01ThreadingTuermeVonHanoi.HanoiScheibe(3, "A", 3, "blue"));
-		hanoiScheiben.add(new UE03A01ThreadingTuermeVonHanoi.HanoiScheibe(4, "A", 4, "yellow"));
+		hanoiScheiben.add(new UE03A01ThreadingTuermeVonHanoi.HanoiScheibe(4, "A", 1, "red"));
+		hanoiScheiben.add(new UE03A01ThreadingTuermeVonHanoi.HanoiScheibe(3, "A", 2, "green"));
+		hanoiScheiben.add(new UE03A01ThreadingTuermeVonHanoi.HanoiScheibe(2, "A", 3, "blue"));
+		hanoiScheiben.add(new UE03A01ThreadingTuermeVonHanoi.HanoiScheibe(1, "A", 4, "yellow"));
 
 		hanoiStapel = new ArrayList<HanoiStapel>();
 		hanoiStapel.add(new HanoiStapel("A", 4));
@@ -372,6 +380,8 @@ public class GuiThreadedTuermeVonHanoi extends Application{
 			}
 			entferneFarbenUndBezeichner();
 			faerbePositionenEin();
+		} else {
+			System.err.println("Zug nicht moeglich.");
 		}
 
 	}
@@ -403,12 +413,23 @@ public class GuiThreadedTuermeVonHanoi extends Application{
 	
 	private static void ziehe_scheibe(int nummer, String von, String nach){
         System.out.println("Scheibe " + nummer + " wird von " + von +
-                " nach " + nach + " verschoben ");
-		verschiebe(nummer, nach);
+				" nach " + nach + " verschoben ");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				verschiebe(nummer, nach);
+			}
+		});
+
     }
 	
-    private static void hanoi(int N, String platz1, String hilfsplatz, String platz2) throws InterruptedException{
-
+    private static void hanoi(int N, String platz1, String hilfsplatz, String platz2){
         if (N == 1) {
             ziehe_scheibe(N, platz1, platz2);
         } else {
